@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/eventos'; // Cambia esto si tu backend corre en otro puerto
+const API_URL = 'http://localhost:3000/eventos';
 
 // Obtener todos los eventos
 export const getEventos = async () => {

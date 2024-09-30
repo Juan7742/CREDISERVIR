@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../views/home.vue';
-import EventosComponent from '../components/EventosComponent.vue'; // Asegúrate de que el nombre y la ruta sean correctos
+import EventosComponent from '../components/EventosComponent.vue';
+import AsistentesComponent from '@/components/AsistentesComponent.vue';
 
 const routes = [
   {
@@ -13,6 +14,11 @@ const routes = [
     name: 'Eventos',
     component: EventosComponent, // Asegúrate de usar el nuevo nombre aquí
   },
+  {
+    path: '/asistentes',
+    name: 'Asistentes',
+    component: AsistentesComponent,
+  }
 ];
 
 const router = createRouter({
