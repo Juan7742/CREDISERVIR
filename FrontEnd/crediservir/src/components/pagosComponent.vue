@@ -14,7 +14,7 @@
 
         <!-- Lista de Eventos -->
         <h2 class="text-xl font-bold mb-4">Selecciona un Evento:</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-1 gap-4">
             <div v-for="evento in eventos" :key="evento.id" class="bg-white shadow-md rounded p-4">
                 <h3 class="text-xl font-bold">{{ evento.titulo }}</h3>
                 <p class="pt-2"><strong>Descripción:</strong> {{ evento.descripcion }}</p>
@@ -25,7 +25,7 @@
                 <p class="pt-1" v-if="evento.tipo === 'pago'"><strong>Valor Base:</strong> {{ evento.valor_base }}</p>
 
                 <!-- Selección de Tipo de Entrada -->
-                <div>
+                <div  v-if="evento.tipo === 'pago'" >
                     <p class="pt-1"><strong>Tipo de entrada:</strong></p>
                     <select v-model="tipoEntrada[evento.id]" class="border p-2 w-full" required
                         :disabled="evento.tipo === 'gratuito'">
@@ -36,26 +36,28 @@
                 </div>
 
                 <!-- Mostrar Costo Adicional -->
-                <p class="pt-2"><strong>Costo Adicional:</strong> {{ calcularCostoAdicional(evento.id) }}</p>
+                <p  v-if="evento.tipo === 'pago'"  class="pt-2"><strong>Costo Adicional:</strong> {{ calcularCostoAdicional(evento.id) }}</p>
 
-                <div>
+                <!-- Código Promocional solo si el evento no es gratuito -->
+                <div v-if="evento.tipo === 'pago'" class="mt-3">
                     <p class=""><strong>Código promocional:</strong></p>
-                    <input v-model="codigoPromocional[evento.id]" class="border p-2 w-full mb-4"
+                    <input v-model="codigoPromocional[evento.id]" class="border p-2 w-full"
                         placeholder="Ingrese el código promocional (Opcional)" />
+                    <p  v-if="evento.tipo === 'pago'"  class="pt-2">
+                        <strong>Descuento del código promocional:</strong> {{ descuentoPromocional[evento.id] }}%
+                    </p>
                     <button @click="buscarCodigoPromocional(evento.id)"
-                        class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600">Buscar</button>
+                        class="bg-green-500 text-white py-1 px-3 rounded hover:bg-green-600">Buscar</button>
                 </div>
 
-                <p v-if="descuentoPromocional[evento.id] !== null" class="pt-2">
-                    <strong>Descuento del código promocional:</strong> {{ descuentoPromocional[evento.id] }}%
+                <!-- Mostrar total a pagar solo si el evento no es gratuito -->
+                <p v-if="evento.tipo === 'pago'" class="pt-2 mt-5">
+                    <strong>Total a pagar:</strong> {{ calcularTotal(evento.id) }} 
                 </p>
-
-                <!-- Total a Pagar -->
-                <p class="pt-2"><strong>Total a pagar:</strong> {{ calcularTotal(evento.id) }} </p>
 
                 <!-- Botón de Comprar -->
                 <button @click="comprar(evento.id)" :disabled="evento.cupo_disponible === 0"
-                    class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600">
+                    class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600 mt-3">
                     Comprar
                 </button>
             </div>
@@ -65,6 +67,7 @@
         <p v-if="mensaje" class="text-red-500">{{ mensaje }}</p>
     </div>
 </template>
+
 
 <script>
 import { getAsistentes } from '../services/asistentesService';
