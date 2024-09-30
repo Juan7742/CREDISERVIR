@@ -44,3 +44,17 @@ exports.deletePromocion = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
+// Obtener una promoción por código
+exports.getPromocionPorCodigo = async (req, res) => {
+  const { codigo } = req.params; // Obtener el código de los parámetros de la solicitud
+  try {
+    const promocion = await Promocion.findOne({ where: { codigo } }); // Buscar la promoción por código
+    if (promocion) {
+      return res.json(promocion); // Devolver la promoción encontrada
+    }
+    res.status(404).json({ error: 'Promoción no encontrada' }); // Manejar caso en que no se encuentra
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

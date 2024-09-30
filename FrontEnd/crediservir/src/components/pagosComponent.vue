@@ -25,7 +25,7 @@
                 <p class="pt-1" v-if="evento.tipo === 'pago'"><strong>Valor Base:</strong> {{ evento.valor_base }}</p>
 
                 <!-- Selección de Tipo de Entrada -->
-                <div class="">
+                <div>
                     <p class="pt-1"><strong>Tipo de entrada:</strong></p>
                     <select v-model="tipoEntrada[evento.id]" class="border p-2 w-full" required
                         :disabled="evento.tipo === 'gratuito'">
@@ -33,19 +33,31 @@
                         <option value="general">General</option>
                         <option value="VIP">VIP</option>
                     </select>
-
                 </div>
+
+                <!-- Mostrar Costo Adicional -->
+                <p class="pt-2"><strong>Costo Adicional:</strong> {{ calcularCostoAdicional(evento.id) }}</p>
 
                 <div>
-                    <p class="pt-1"><strong>Codigo promocional:</strong></p>
-                    <input v-model="codigoPromocional" class="border p-2 w-full mb-4"
+                    <p class=""><strong>Código promocional:</strong></p>
+                    <input v-model="codigoPromocional[evento.id]" class="border p-2 w-full mb-4"
                         placeholder="Ingrese el código promocional (Opcional)" />
+                    <button @click="buscarCodigoPromocional(evento.id)"
+                        class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600">Buscar</button>
                 </div>
 
+                <p v-if="descuentoPromocional[evento.id] !== null" class="pt-2">
+                    <strong>Descuento del código promocional:</strong> {{ descuentoPromocional[evento.id] }}%
+                </p>
+
+                <!-- Total a Pagar -->
+                <p class="pt-2"><strong>Total a pagar:</strong> {{ calcularTotal(evento.id) }} </p>
 
                 <!-- Botón de Comprar -->
-                <button @click="comprar(evento.id)"
-                    class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600">Comprar</button>
+                <button @click="comprar(evento.id)" :disabled="evento.cupo_disponible === 0"
+                    class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600">
+                    Comprar
+                </button>
             </div>
         </div>
 
@@ -57,6 +69,7 @@
 <script>
 import { getAsistentes } from '../services/asistentesService';
 import { getEventos } from '../services/eventosService';
+import { buscarPromocion } from '../services/promocionesService';
 
 export default {
     name: 'PagosComponent',
@@ -65,9 +78,10 @@ export default {
             asistentes: [],
             eventos: [],
             selectedAsistente: null,
-            tipoEntrada: {}, // Para almacenar el tipo de entrada seleccionado por evento
+            tipoEntrada: {},
             mensaje: '',
-            codigoPromocional: '', // Mensaje de éxito o error
+            codigoPromocional: {}, // Cambiado a objeto para manejar el código por evento
+            descuentoPromocional: {}, // Cambiado a objeto para manejar el descuento por evento
         };
     },
     async created() {
@@ -86,14 +100,47 @@ export default {
             try {
                 this.eventos = await getEventos();
                 this.eventos.forEach(evento => {
-                    this.tipoEntrada[evento.id] = evento.tipo === 'gratuito' ? 'gratis' : 'gratis'; // Preselecciona "Gratis" para eventos gratuitos
+                    this.tipoEntrada[evento.id] = evento.tipo === 'gratuito' ? 'gratis' : 'gratis';
                 });
             } catch (error) {
                 console.error('Error al obtener eventos:', error);
             }
         },
+        async buscarCodigoPromocional(eventoId) {
+            try {
+                const response = await buscarPromocion(this.codigoPromocional[eventoId]);
+                this.descuentoPromocional[eventoId] = response.porcentaje_descuento;
+            } catch (error) {
+                console.error('Error al buscar código promocional:', error);
+                this.descuentoPromocional[eventoId] = null;
+            }
+        },
+        calcularCostoAdicional(eventoId) {
+            const tipo = this.tipoEntrada[eventoId];
+            const evento = this.eventos.find(event => event.id === eventoId);
+            let costoAdicional = 0;
+
+            if (tipo === 'general') {
+                costoAdicional = (evento.valor_base * 0.15).toFixed(2);
+            } else if (tipo === 'VIP') {
+                costoAdicional = (evento.valor_base * 0.30).toFixed(2);
+            }
+
+            return costoAdicional;
+        },
+        calcularTotal(eventoId) {
+            const costoAdicional = parseFloat(this.calcularCostoAdicional(eventoId));
+            const evento = this.eventos.find(event => event.id === eventoId);
+            let total = parseFloat(evento.valor_base) + costoAdicional;
+
+            // Aplicar descuento si existe
+            if (this.descuentoPromocional[eventoId]) {
+                total -= (total * this.descuentoPromocional[eventoId]) / 100;
+            }
+
+            return total.toFixed(2); // Redondear a 2 decimales
+        },
         async comprar(eventoId) {
-            // Lógica para manejar la compra
             const tipo = this.tipoEntrada[eventoId];
 
             if (!this.selectedAsistente) {
@@ -102,8 +149,6 @@ export default {
             }
 
             if (tipo) {
-                // Aquí deberías implementar la lógica de compra usando el eventoId y selectedAsistente
-                // y el tipo de entrada seleccionado.
                 this.mensaje = `Compra realizada para el evento ID: ${eventoId} con tipo de entrada: ${tipo}.`;
             } else {
                 this.mensaje = 'Debes seleccionar un tipo de entrada.';

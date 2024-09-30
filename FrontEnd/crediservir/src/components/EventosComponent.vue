@@ -172,12 +172,10 @@ export default {
         return;
       }
 
-      // Preparar datos del evento antes de enviarlos
+      // Si es un evento gratuito, eliminamos el campo valor_base antes de enviar
       const eventoData = { ...this.evento };
-
-      // Si el evento es gratuito, eliminar o establecer en null el valor_base
       if (eventoData.tipo === 'gratuito') {
-        eventoData.valor_base = null; // O eliminar el campo: delete eventoData.valor_base;
+        delete eventoData.valor_base; // Eliminar el campo valor_base para eventos gratuitos
       }
 
       // Si las validaciones pasan, limpiar el mensaje de error
@@ -197,7 +195,8 @@ export default {
         console.error('Error al guardar el evento:', error);
         this.errorMessage = 'Hubo un error al guardar el evento. Revisa los datos e inténtalo de nuevo.';
       }
-    },
+    }
+    ,
     editEvento(evento) {
       this.evento = { ...evento };
       this.eventoId = evento.id;

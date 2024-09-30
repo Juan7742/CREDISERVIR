@@ -15,4 +15,7 @@ router.put('/:id', promocionesController.updatePromocion);
 // Eliminar una promoción
 router.delete('/:id', promocionesController.deletePromocion);
 
+router.get('/:codigo', promocionesController.getPromocionPorCodigo);
+
+
 module.exports = router;
