@@ -3,6 +3,7 @@ import Home from '../views/home.vue';
 import EventosComponent from '../components/EventosComponent.vue';
 import AsistentesComponent from '@/components/AsistentesComponent.vue';
 import PagosComponent from '@/components/pagosComponent.vue';
+import PromocionesComponent from '@/components/PromocionesComponent.vue';
 
 const routes = [
   {
@@ -24,6 +25,11 @@ const routes = [
     path: '/pagos',
     name: 'Pagos',
     component: PagosComponent,
+  },
+  {
+    path: '/promociones',
+    name: 'Promociones',
+    component: PromocionesComponent,
   }
 ];
 
