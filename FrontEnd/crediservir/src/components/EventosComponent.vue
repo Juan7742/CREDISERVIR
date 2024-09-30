@@ -9,12 +9,12 @@
       <input v-model="evento.fecha" type="date" required />
       <input v-model="evento.hora" type="time" required />
       <input v-model="evento.lugar" placeholder="Lugar" required />
-      <input v-model="evento.cupo_disponible" type="number" placeholder="Cupo Disponible" required min="1"/>
+      <input v-model="evento.cupo_disponible" type="number" placeholder="Cupo Disponible" required min="1" />
       <select v-model="evento.tipo" required>
         <option value="gratuito">Gratuito</option>
         <option value="pago">Pago</option>
       </select>
-      <input v-model="evento.valor_base" type="number" placeholder="Valor Base" v-if="evento.tipo === 'pago'"  min="1"/>
+      <input v-model="evento.valor_base" type="number" placeholder="Valor Base" v-if="evento.tipo === 'pago'" min="1" />
       <input v-model="evento.categorias" placeholder="Categorías (separadas por comas)" />
       <input v-model="evento.fecha_apertura" type="date" placeholder="Fecha de Apertura Inscripción" required />
       <input v-model="evento.fecha_cierre" type="date" placeholder="Fecha de Cierre Inscripción" required />
@@ -28,13 +28,23 @@
     <!-- Lista de eventos -->
     <ul>
       <li v-for="evento in eventos" :key="evento.id">
-        {{ evento.titulo }} - {{ evento.fecha }}
+        <h3>{{ evento.titulo }}</h3>
+        <p><strong>Descripción:</strong> {{ evento.descripcion }}</p>
+        <p><strong>Fecha:</strong> {{ evento.fecha }} <strong>Hora:</strong> {{ evento.hora }}</p>
+        <p><strong>Lugar:</strong> {{ evento.lugar }}</p>
+        <p><strong>Cupo Disponible:</strong> {{ evento.cupo_disponible }}</p>
+        <p><strong>Tipo:</strong> {{ evento.tipo }}</p>
+        <!-- Mostrar el valor base solo si el tipo de evento es pago -->
+        <p v-if="evento.tipo === 'pago'"><strong>Valor Base:</strong> {{ evento.valor_base }}</p>
+        <p><strong>Categorías:</strong> {{ evento.categorias }}</p>
+        
         <button @click="editEvento(evento)">Editar</button>
         <button @click="deleteEvento(evento.id)">Eliminar</button>
       </li>
     </ul>
   </div>
 </template>
+
 
 <script>
 import { getEventos, createEvento, updateEvento, deleteEvento } from '../services/eventosService';
@@ -74,66 +84,67 @@ export default {
       }
     },
     async submitForm() {
-  const fechaApertura = new Date(this.evento.fecha_apertura);
-  const fechaCierre = new Date(this.evento.fecha_cierre);
-  const fechaEvento = new Date(this.evento.fecha);
+      const fechaApertura = new Date(this.evento.fecha_apertura);
+      const fechaCierre = new Date(this.evento.fecha_cierre);
+      const fechaEvento = new Date(this.evento.fecha);
 
-  // Validación 1: La fecha de cierre no puede ser menor que la fecha de apertura
-  if (fechaCierre < fechaApertura) {
-    this.errorMessage = 'La fecha de cierre no puede ser menor que la fecha de apertura';
-    return;
-  }
+      // Validación 1: La fecha de cierre no puede ser menor que la fecha de apertura
+      if (fechaCierre < fechaApertura) {
+        this.errorMessage = 'La fecha de cierre no puede ser menor que la fecha de apertura';
+        return;
+      }
 
-  // Validación 2: Las fechas de apertura y cierre deben ser menores que la fecha del evento
-  if (fechaApertura >= fechaEvento) {
-    this.errorMessage = 'La fecha de apertura debe ser menor que la fecha del evento';
-    return;
-  }
+      // Validación 2: Las fechas de apertura y cierre deben ser menores que la fecha del evento
+      if (fechaApertura >= fechaEvento) {
+        this.errorMessage = 'La fecha de apertura debe ser menor que la fecha del evento';
+        return;
+      }
 
-  if (fechaCierre >= fechaEvento) {
-    this.errorMessage = 'La fecha de cierre debe ser menor que la fecha del evento';
-    return;
-  }
+      if (fechaCierre >= fechaEvento) {
+        this.errorMessage = 'La fecha de cierre debe ser menor que la fecha del evento';
+        return;
+      }
 
-  // Si es un evento gratuito, eliminamos el campo valor_base antes de enviar
-  const eventoData = { ...this.evento };
-  if (eventoData.tipo === 'gratuito') {
-    delete eventoData.valor_base; // Eliminar el campo valor_base para eventos gratuitos
-  }
+      // Preparar datos del evento antes de enviarlos
+      const eventoData = { ...this.evento };
 
-  // Si las validaciones pasan, limpiar el mensaje de error
-  this.errorMessage = '';
+      // Si el evento es gratuito, eliminar o establecer en null el valor_base
+      if (eventoData.tipo === 'gratuito') {
+        eventoData.valor_base = null; // O eliminar el campo: delete eventoData.valor_base;
+      }
 
-  try {
-    if (this.isEditing) {
-      // Editar evento
-      await updateEvento(this.eventoId, eventoData);
-    } else {
-      // Crear nuevo evento
-      await createEvento(eventoData);
-    }
-    await this.fetchEventos();
-    this.resetForm();
-  } catch (error) {
-    console.error('Error al guardar el evento:', error);
-    this.errorMessage = 'Hubo un error al guardar el evento. Revisa los datos e inténtalo de nuevo.';
-  }
-}
-,
+      // Si las validaciones pasan, limpiar el mensaje de error
+      this.errorMessage = '';
+
+      try {
+        if (this.isEditing) {
+          // Editar evento
+          await updateEvento(this.eventoId, eventoData);
+        } else {
+          // Crear nuevo evento
+          await createEvento(eventoData);
+        }
+        await this.fetchEventos();
+        this.resetForm();
+      } catch (error) {
+        console.error('Error al guardar el evento:', error);
+        this.errorMessage = 'Hubo un error al guardar el evento. Revisa los datos e inténtalo de nuevo.';
+      }
+    },
     editEvento(evento) {
       this.evento = { ...evento };
       this.eventoId = evento.id;
       this.isEditing = true;
     },
     async deleteEvento(id) {
-  try {
-    await deleteEvento(id);
-    await this.fetchEventos();
-  } catch (error) {
-    console.error('Error al eliminar el evento:', error);
-    this.errorMessage = 'No se pudo eliminar el evento. Puede estar relacionado con otros datos.';
-  }
-},
+      try {
+        await deleteEvento(id);
+        await this.fetchEventos();
+      } catch (error) {
+        console.error('Error al eliminar el evento:', error);
+        this.errorMessage = 'No se pudo eliminar el evento. Puede estar relacionado con otros datos.';
+      }
+    },
     resetForm() {
       this.evento = {
         titulo: '',
