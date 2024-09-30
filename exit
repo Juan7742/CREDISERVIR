@@ -1,0 +1,45 @@
+[33mcommit fb24ccaaf45118fda7333d9d4c1509cabb40f209[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Juan Sebastian Badillo Rincón <71675425+Juan7742@users.noreply.github.com>
+Date:   Mon Sep 30 12:53:40 2024 -0500
+
+    View Eventos, Asistentes, ready
+    
+    Obtener, eliminar, editar, listos. En ambas vistas.
+
+[33mcommit 02a7ed1f2c51c5926651875cbedcc8304f84b8cb[m
+Author: Juan Sebastian Badillo Rincón <71675425+Juan7742@users.noreply.github.com>
+Date:   Mon Sep 30 11:37:33 2024 -0500
+
+    Tailwind cofigured
+
+[33mcommit 6c460adebeb6e0a501af491104b55ac7db829a66[m
+Author: Juan Sebastian Badillo Rincón <71675425+Juan7742@users.noreply.github.com>
+Date:   Mon Sep 30 11:19:25 2024 -0500
+
+    install tailwind
+
+[33mcommit c90cfcd6d8e564b700d3548f9c74b1170bd86edb[m
+Author: Juan Sebastian Badillo Rincón <71675425+Juan7742@users.noreply.github.com>
+Date:   Mon Sep 30 11:07:51 2024 -0500
+
+    View Gestion de eventos Ready
+    
+    Not styles
+
+[33mcommit b0a3bc51f316aeeeadda8f6273fa9bc2f06ca59b[m
+Author: Juan Sebastian Badillo Rincón <71675425+Juan7742@users.noreply.github.com>
+Date:   Mon Sep 30 10:28:56 2024 -0500
+
+    Update EventosComponent.vue
+
+[33mcommit deb4bf13556d897e4f0a8546b1c07d509eaa9c35[m
+Author: Juan Sebastian Badillo Rincón <71675425+Juan7742@users.noreply.github.com>
+Date:   Mon Sep 30 10:04:44 2024 -0500
+
+    Update EventosComponent.vue
+
+[33mcommit 1ebab9c2b5bb2b5e7c0b8f330260ec888adae953[m
+Author: Juan Sebastian Badillo Rincón <71675425+Juan7742@users.noreply.github.com>
+Date:   Mon Sep 30 09:33:47 2024 -0500
+
+    Frontend and backend
