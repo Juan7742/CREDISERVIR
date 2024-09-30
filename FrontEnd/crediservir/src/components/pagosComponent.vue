@@ -25,7 +25,7 @@
                 <p class="pt-1" v-if="evento.tipo === 'pago'"><strong>Valor Base:</strong> {{ evento.valor_base }}</p>
 
                 <!-- Selección de Tipo de Entrada -->
-                <div  v-if="evento.tipo === 'pago'" >
+                <div v-if="evento.tipo === 'pago'">
                     <p class="pt-1"><strong>Tipo de entrada:</strong></p>
                     <select v-model="tipoEntrada[evento.id]" class="border p-2 w-full" required
                         :disabled="evento.tipo === 'gratuito'">
@@ -36,14 +36,15 @@
                 </div>
 
                 <!-- Mostrar Costo Adicional -->
-                <p  v-if="evento.tipo === 'pago'"  class="pt-2"><strong>Costo Adicional:</strong> {{ calcularCostoAdicional(evento.id) }}</p>
+                <p v-if="evento.tipo === 'pago'" class="pt-2"><strong>Costo Adicional:</strong> {{
+                    calcularCostoAdicional(evento.id) }}</p>
 
                 <!-- Código Promocional solo si el evento no es gratuito -->
                 <div v-if="evento.tipo === 'pago'" class="mt-3">
                     <p class=""><strong>Código promocional:</strong></p>
                     <input v-model="codigoPromocional[evento.id]" class="border p-2 w-full"
                         placeholder="Ingrese el código promocional (Opcional)" />
-                    <p  v-if="evento.tipo === 'pago'"  class="pt-2">
+                    <p v-if="evento.tipo === 'pago'" class="pt-2">
                         <strong>Descuento del código promocional:</strong> {{ descuentoPromocional[evento.id] }}%
                     </p>
                     <button @click="buscarCodigoPromocional(evento.id)"
@@ -52,7 +53,7 @@
 
                 <!-- Mostrar total a pagar solo si el evento no es gratuito -->
                 <p v-if="evento.tipo === 'pago'" class="pt-2 mt-5">
-                    <strong>Total a pagar:</strong> {{ calcularTotal(evento.id) }} 
+                    <strong>Total a pagar:</strong> {{ calcularTotal(evento.id) }}
                 </p>
 
                 <!-- Botón de Comprar -->
@@ -64,7 +65,14 @@
         </div>
 
         <!-- Mostrar mensaje de éxito o error -->
-        <p v-if="mensaje" class="text-red-500">{{ mensaje }}</p>
+        <transition name="fade">
+            <div v-if="mensaje" class="fixed top-0 left-0 right-0 flex items-center justify-center z-50">
+                <div class="bg-red-500 text-white p-4 rounded shadow-lg">
+                    {{ mensaje }}
+                    <button @click="mensaje = ''" class="ml-4">Cerrar</button>
+                </div>
+            </div>
+        </transition>
     </div>
 </template>
 
@@ -112,10 +120,32 @@ export default {
         async buscarCodigoPromocional(eventoId) {
             try {
                 const response = await buscarPromocion(this.codigoPromocional[eventoId]);
+
+                // Validar si el código está activo y vigente
+                if (response.estado === 'inactivo') {
+                    this.mensaje = 'El código promocional está inactivo.';
+                    this.descuentoPromocional[eventoId] = null;
+                    return;
+                }
+
+                const fechaActual = new Date();
+                const fechaInicio = new Date(response.fecha_inicio);
+                const fechaFin = new Date(response.fecha_fin);
+
+                if (fechaActual < fechaInicio || fechaActual > fechaFin) {
+                    this.mensaje = 'El código promocional no está vigente.';
+                    this.descuentoPromocional[eventoId] = null;
+                    return;
+                }
+
+                // Si todas las condiciones se cumplen
                 this.descuentoPromocional[eventoId] = response.porcentaje_descuento;
+                this.mensaje = ''; // Limpiar el mensaje de error
+
             } catch (error) {
                 console.error('Error al buscar código promocional:', error);
                 this.descuentoPromocional[eventoId] = null;
+                this.mensaje = 'Código promocional no válido o no encontrado.'; // Mensaje de error genérico
             }
         },
         calcularCostoAdicional(eventoId) {
