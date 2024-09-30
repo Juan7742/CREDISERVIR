@@ -1,49 +1,49 @@
 <template>
-  <div>
-    <h1>Gestión de Eventos</h1>
+  <div class="max-w-4xl mx-auto py-8">
+    <h1 class="text-3xl font-bold mb-6">Gestión de Eventos</h1>
 
     <!-- Formulario para crear/editar evento -->
-    <form @submit.prevent="submitForm">
-      <input v-model="evento.titulo" placeholder="Título" required />
-      <textarea v-model="evento.descripcion" placeholder="Descripción"></textarea>
-      <input v-model="evento.fecha" type="date" required />
-      <input v-model="evento.hora" type="time" required />
-      <input v-model="evento.lugar" placeholder="Lugar" required />
-      <input v-model="evento.cupo_disponible" type="number" placeholder="Cupo Disponible" required min="1" />
-      <select v-model="evento.tipo" required>
+    <form @submit.prevent="submitForm" class="mb-8">
+      <input v-model="evento.titulo" class="border p-2 w-full mb-4" placeholder="Título" required />
+      <textarea v-model="evento.descripcion" class="border p-2 w-full mb-4" placeholder="Descripción"></textarea>
+      <input v-model="evento.fecha" class="border p-2 w-full mb-4" type="date" required />
+      <input v-model="evento.hora" class="border p-2 w-full mb-4" type="time" required />
+      <input v-model="evento.lugar" class="border p-2 w-full mb-4" placeholder="Lugar" required />
+      <input v-model="evento.cupo_disponible" class="border p-2 w-full mb-4" type="number" placeholder="Cupo Disponible" required min="1" />
+      <select v-model="evento.tipo" class="border p-2 w-full mb-4" required>
         <option value="gratuito">Gratuito</option>
         <option value="pago">Pago</option>
       </select>
-      <input v-model="evento.valor_base" type="number" placeholder="Valor Base" v-if="evento.tipo === 'pago'" min="1" />
-      <input v-model="evento.categorias" placeholder="Categorías (separadas por comas)" />
-      <input v-model="evento.fecha_apertura" type="date" placeholder="Fecha de Apertura Inscripción" required />
-      <input v-model="evento.fecha_cierre" type="date" placeholder="Fecha de Cierre Inscripción" required />
+      <input v-model="evento.valor_base" class="border p-2 w-full mb-4" type="number" placeholder="Valor Base" v-if="evento.tipo === 'pago'" min="1" />
+      <input v-model="evento.categorias" class="border p-2 w-full mb-4" placeholder="Categorías (separadas por comas)" />
+      <input v-model="evento.fecha_apertura" class="border p-2 w-full mb-4" type="date" placeholder="Fecha de Apertura Inscripción" required />
+      <input v-model="evento.fecha_cierre" class="border p-2 w-full mb-4" type="date" placeholder="Fecha de Cierre Inscripción" required />
 
       <!-- Mostrar mensaje de error si la validación falla -->
-      <p v-if="errorMessage" style="color: red;">{{ errorMessage }}</p>
+      <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p>
 
-      <button type="submit">Guardar Evento</button>
+      <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">Guardar Evento</button>
     </form>
 
     <!-- Lista de eventos -->
     <ul>
-      <li v-for="evento in eventos" :key="evento.id">
-        <h3>{{ evento.titulo }}</h3>
+      <li v-for="evento in eventos" :key="evento.id" class="bg-white shadow-md rounded p-4 mb-4">
+        <h3 class="text-xl font-bold">{{ evento.titulo }}</h3>
         <p><strong>Descripción:</strong> {{ evento.descripcion }}</p>
         <p><strong>Fecha:</strong> {{ evento.fecha }} <strong>Hora:</strong> {{ evento.hora }}</p>
         <p><strong>Lugar:</strong> {{ evento.lugar }}</p>
         <p><strong>Cupo Disponible:</strong> {{ evento.cupo_disponible }}</p>
         <p><strong>Tipo:</strong> {{ evento.tipo }}</p>
-        <!-- Mostrar el valor base solo si el tipo de evento es pago -->
         <p v-if="evento.tipo === 'pago'"><strong>Valor Base:</strong> {{ evento.valor_base }}</p>
         <p><strong>Categorías:</strong> {{ evento.categorias }}</p>
         
-        <button @click="editEvento(evento)">Editar</button>
-        <button @click="deleteEvento(evento.id)">Eliminar</button>
+        <button @click="editEvento(evento)" class="bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-600 mr-2">Editar</button>
+        <button @click="deleteEvento(evento.id)" class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600">Eliminar</button>
       </li>
     </ul>
   </div>
 </template>
+
 
 
 <script>
