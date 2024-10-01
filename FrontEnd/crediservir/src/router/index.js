@@ -4,6 +4,7 @@ import EventosComponent from '../components/EventosComponent.vue';
 import AsistentesComponent from '@/components/AsistentesComponent.vue';
 import PagosComponent from '@/components/pagosComponent.vue';
 import PromocionesComponent from '@/components/PromocionesComponent.vue';
+import PanelAdministracion from '@/components/PanelAdministracion.vue';
 
 const routes = [
   {
@@ -30,7 +31,12 @@ const routes = [
     path: '/promociones',
     name: 'Promociones',
     component: PromocionesComponent,
-  }
+  },
+  {
+    path: '/administracion',
+    name: 'Administracion',
+    component: PanelAdministracion,
+  },
 ];
 
 const router = createRouter({
