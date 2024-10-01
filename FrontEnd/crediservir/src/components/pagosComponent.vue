@@ -27,8 +27,7 @@
                 <!-- Selección de Tipo de Entrada -->
                 <div v-if="evento.tipo === 'pago'">
                     <p class="pt-1"><strong>Tipo de entrada:</strong></p>
-                    <select v-model="tipoEntrada[evento.id]" class="border p-2 w-full" required
-                        :disabled="evento.tipo === 'gratuito'">
+                    <select v-model="tipoEntrada[evento.id]" class="border p-2 w-full" required>
                         <option value="gratis">Gratis</option>
                         <option value="general">General</option>
                         <option value="VIP">VIP</option>
@@ -36,31 +35,25 @@
                 </div>
 
                 <!-- Mostrar Costo Adicional -->
-                <p v-if="evento.tipo === 'pago'" class="pt-2"><strong>Costo Adicional:</strong> {{
-                    calcularCostoAdicional(evento.id) }}</p>
+                <p v-if="evento.tipo === 'pago'" class="pt-2"><strong>Costo Adicional:</strong> {{ calcularCostoAdicional(evento.id) }}</p>
 
-                <!-- Código Promocional solo si el evento no es gratuito -->
+                <!-- Código Promocional -->
                 <div v-if="evento.tipo === 'pago'" class="mt-3">
-                    <p class=""><strong>Código promocional:</strong></p>
-                    <input v-model="codigoPromocional[evento.id]" class="border p-2 w-full"
-                        placeholder="Ingrese el código promocional (Opcional)" />
+                    <p><strong>Código promocional:</strong></p>
+                    <input v-model="codigoPromocional[evento.id]" class="border p-2 w-full" placeholder="Ingrese el código promocional (Opcional)" />
                     <p v-if="evento.tipo === 'pago'" class="pt-2">
                         <strong>Descuento del código promocional:</strong> {{ descuentoPromocional[evento.id] }}%
                     </p>
-                    <button @click="buscarCodigoPromocional(evento.id)"
-                        class="bg-green-500 text-white py-1 px-3 rounded hover:bg-green-600">Buscar</button>
+                    <button @click="buscarCodigoPromocional(evento.id)" class="bg-green-500 text-white py-1 px-3 rounded hover:bg-green-600">Buscar</button>
                 </div>
 
-                <!-- Mostrar total a pagar solo si el evento no es gratuito -->
+                <!-- Mostrar total a pagar -->
                 <p v-if="evento.tipo === 'pago'" class="pt-2 mt-5">
-                    <strong>Total a pagar:</strong> {{ calcularTotal(evento.id) }}
+                    <strong>Total a pagar:</strong> {{ calcularTotal(evento.id) }} 
                 </p>
 
                 <!-- Botón de Comprar -->
-                <button @click="comprar(evento.id)" :disabled="evento.cupo_disponible === 0"
-                    class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600 mt-3">
-                    Comprar
-                </button>
+                <button @click="comprar(evento.id)" :disabled="evento.cupo_disponible === 0" class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600 mt-3">Comprar</button>
             </div>
         </div>
 
@@ -76,11 +69,12 @@
     </div>
 </template>
 
-
 <script>
 import { getAsistentes } from '../services/asistentesService';
 import { getEventos } from '../services/eventosService';
-import { buscarPromocion } from '../services/promocionesService';
+import { realizarPago, registrarInscripcion } from '../services/pagosService'; // Servicios de pagos e inscripciones
+import { buscarPromocion } from '../services/promocionesService'; // Verifica la ruta correcta
+
 
 export default {
     name: 'PagosComponent',
@@ -91,8 +85,8 @@ export default {
             selectedAsistente: null,
             tipoEntrada: {},
             mensaje: '',
-            codigoPromocional: {}, // Cambiado a objeto para manejar el código por evento
-            descuentoPromocional: {}, // Cambiado a objeto para manejar el descuento por evento
+            codigoPromocional: {},
+            descuentoPromocional: {},
         };
     },
     async created() {
@@ -145,7 +139,7 @@ export default {
             } catch (error) {
                 console.error('Error al buscar código promocional:', error);
                 this.descuentoPromocional[eventoId] = null;
-                this.mensaje = 'Código promocional no válido o no encontrado.'; // Mensaje de error genérico
+                this.mensaje = 'Código promocional no válido o no encontrado.';
             }
         },
         calcularCostoAdicional(eventoId) {
@@ -171,6 +165,11 @@ export default {
                 total -= (total * this.descuentoPromocional[eventoId]) / 100;
             }
 
+            // Asegurarse de que el total no sea menor al 70% del valor base
+            if (total < (evento.valor_base * 0.7)) {
+                total = evento.valor_base * 0.7;
+            }
+
             return total.toFixed(2); // Redondear a 2 decimales
         },
         async comprar(eventoId) {
@@ -181,16 +180,30 @@ export default {
                 return;
             }
 
-            if (tipo) {
-                this.mensaje = `Compra realizada para el evento ID: ${eventoId} con tipo de entrada: ${tipo}.`;
-            } else {
-                this.mensaje = 'Debes seleccionar un tipo de entrada.';
+            const totalAPagar = this.calcularTotal(eventoId);
+
+            try {
+                // Registrar inscripción
+                const inscripcionResponse = await registrarInscripcion({
+                    evento_id: eventoId,
+                    asistente_id: this.selectedAsistente,
+                    tipo_entrada: tipo,
+                    valor_total: totalAPagar,
+                    estado: 'confirmado',
+                });
+
+                // Registrar pago
+                await realizarPago({
+                    inscripcion_id: inscripcionResponse.id,
+                    monto: totalAPagar,
+                });
+
+                this.mensaje = `Compra realizada con éxito para el evento: ${eventoId}`;
+            } catch (error) {
+                console.error('Error al procesar la compra:', error);
+                this.mensaje = 'Ocurrió un error al procesar la compra.';
             }
         },
     },
 };
 </script>
-
-<style scoped>
-/* Estilos personalizados aquí */
-</style>
