@@ -23,7 +23,7 @@ const Asistente = sequelize.define('Asistente', {
   }
 }, {
   tableName: 'asistentes',
-  timestamps: true // Habilita createdAt y updatedAt
+  timestamps: true
 });
 
 module.exports = Asistente;

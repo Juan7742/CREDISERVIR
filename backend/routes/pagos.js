@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const pagosController = require('../controllers/pagosController'); // Importar controladores
-const validatePago = require('../validators/pagosValidator'); // Importar validación
+const pagosController = require('../controllers/pagosController');
+const validatePago = require('../validators/pagosValidator');
 
 // Obtener todos los pagos
 router.get('/', pagosController.getAllPagos);

@@ -6,12 +6,12 @@
 </template>
 
 <script>
-import EventosComponent from '../components/EventosComponent.vue'; // Actualiza la importación
+import EventosComponent from '../components/EventosComponent.vue';
 
 const routes = [
   {
     path: '/eventos',
-    name: 'EventosComponent', // Actualiza el nombre de la ruta
+    name: 'EventosComponent',
     component: EventosComponent
   }
 ];

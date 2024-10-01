@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/promociones'; // Asegúrate de que esta URL sea correcta
+const API_URL = 'http://localhost:3000/promociones';
 
 // Buscar código promocional por su código
 export const buscarPromocion = async (codigo) => {

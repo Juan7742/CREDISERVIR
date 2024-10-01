@@ -35,7 +35,7 @@ const Inscripcion = sequelize.define('Inscripcion', {
   }
 }, {
   tableName: 'inscripciones',
-  timestamps: true // Habilita createdAt y updatedAt
+  timestamps: true
 });
 
 module.exports = Inscripcion;

@@ -2,7 +2,6 @@
     <div class="max-w-4xl mx-auto py-8 px-8">
         <h1 class="text-3xl font-bold mb-6">Pagos y Facturación</h1>
 
-        <!-- Seleccionar Asistente -->
         <div class="mb-4">
             <label class="block text-gray-500 font-bold mb-2">Selecciona un Asistente:</label>
             <select v-model="selectedAsistente" class="border p-2 w-full">
@@ -12,7 +11,6 @@
             </select>
         </div>
 
-        <!-- Lista de Eventos -->
         <h2 class="text-xl font-bold mb-4">Selecciona un Evento:</h2>
         <div class="grid grid-cols-1 md:grid-cols-1 gap-4">
             <div v-for="evento in eventos" :key="evento.id" class="bg-white shadow-md rounded p-4">
@@ -24,7 +22,6 @@
                 <p class="pt-1"><strong>Tipo:</strong> {{ evento.tipo }}</p>
                 <p class="pt-1" v-if="evento.tipo === 'pago'"><strong>Valor Base:</strong> {{ evento.valor_base }}</p>
 
-                <!-- Selección de Tipo de Entrada -->
                 <div v-if="evento.tipo === 'pago'">
                     <p class="pt-1"><strong>Tipo de entrada:</strong></p>
                     <select v-model="tipoEntrada[evento.id]" class="border p-2 w-full" required>
@@ -34,10 +31,8 @@
                     </select>
                 </div>
 
-                <!-- Mostrar Costo Adicional -->
                 <p v-if="evento.tipo === 'pago'" class="pt-2"><strong>Costo Adicional:</strong> {{ calcularCostoAdicional(evento.id) }}</p>
 
-                <!-- Código Promocional -->
                 <div v-if="evento.tipo === 'pago'" class="mt-3">
                     <p><strong>Código promocional:</strong></p>
                     <input v-model="codigoPromocional[evento.id]" class="border p-2 w-full" placeholder="Ingrese el código promocional (Opcional)" />
@@ -47,17 +42,14 @@
                     <button @click="buscarCodigoPromocional(evento.id)" class="bg-green-500 text-white py-1 px-3 rounded hover:bg-green-600">Buscar</button>
                 </div>
 
-                <!-- Mostrar total a pagar -->
                 <p v-if="evento.tipo === 'pago'" class="pt-2 mt-5">
                     <strong>Total a pagar:</strong> {{ calcularTotal(evento.id) }} 
                 </p>
 
-                <!-- Botón de Comprar -->
                 <button @click="comprar(evento.id)" :disabled="evento.cupo_disponible === 0" class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600 mt-3">Comprar</button>
             </div>
         </div>
 
-        <!-- Mostrar mensaje de éxito o error -->
         <transition name="fade">
             <div v-if="mensaje" class="fixed top-0 left-0 right-0 flex items-center justify-center z-50">
                 <div class="bg-red-500 text-white p-4 rounded shadow-lg">
@@ -72,8 +64,8 @@
 <script>
 import { getAsistentes } from '../services/asistentesService';
 import { getEventos } from '../services/eventosService';
-import { realizarPago, registrarInscripcion } from '../services/pagosService'; // Servicios de pagos e inscripciones
-import { buscarPromocion } from '../services/promocionesService'; // Verifica la ruta correcta
+import { realizarPago, registrarInscripcion } from '../services/pagosService';
+import { buscarPromocion } from '../services/promocionesService';
 
 
 export default {
@@ -132,9 +124,8 @@ export default {
                     return;
                 }
 
-                // Si todas las condiciones se cumplen
                 this.descuentoPromocional[eventoId] = response.porcentaje_descuento;
-                this.mensaje = ''; // Limpiar el mensaje de error
+                this.mensaje = '';
 
             } catch (error) {
                 console.error('Error al buscar código promocional:', error);
@@ -170,7 +161,7 @@ export default {
                 total = evento.valor_base * 0.7;
             }
 
-            return total.toFixed(2); // Redondear a 2 decimales
+            return total.toFixed(2);
         },
         async comprar(eventoId) {
             const tipo = this.tipoEntrada[eventoId];

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const asistentesController = require('../controllers/asistentesController'); // Importar controladores
-const validateAsistente = require('../validators/asistentesValidator'); // Importar validación
+const asistentesController = require('../controllers/asistentesController');
+const validateAsistente = require('../validators/asistentesValidator');
 
 // Obtener todos los asistentes
 router.get('/', asistentesController.getAllAsistentes);

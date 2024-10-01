@@ -23,7 +23,7 @@ const Promocion = sequelize.define('Promocion', {
   }
 }, {
   tableName: 'promociones',
-  timestamps: true // Habilita createdAt y updatedAt
+  timestamps: true
 });
 
 module.exports = Promocion;

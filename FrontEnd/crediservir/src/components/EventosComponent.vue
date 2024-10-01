@@ -89,7 +89,7 @@
     </form>
 
     <!-- Lista de eventos -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4"> <!-- Cambia a grid con 2 columnas en pantallas medianas -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div v-for="evento in eventos" :key="evento.id" class="bg-white shadow-md rounded p-4">
         <h3 class="text-xl font-bold">{{ evento.titulo }}</h3>
         <p class="pt-2"><strong>Descripción:</strong> {{ evento.descripcion }}</p>
@@ -135,8 +135,8 @@ export default {
         fecha_cierre: '',
       },
       isEditing: false,
-      eventoId: null, // Para saber si estamos editando
-      errorMessage: '', // Para mostrar mensajes de error
+      eventoId: null,
+      errorMessage: '',
     };
   },
   async created() {
@@ -155,13 +155,11 @@ export default {
       const fechaCierre = new Date(this.evento.fecha_cierre);
       const fechaEvento = new Date(this.evento.fecha);
 
-      // Validación 1: La fecha de cierre no puede ser menor que la fecha de apertura
       if (fechaCierre < fechaApertura) {
         this.errorMessage = 'La fecha de cierre no puede ser menor que la fecha de apertura';
         return;
       }
 
-      // Validación 2: Las fechas de apertura y cierre deben ser menores que la fecha del evento
       if (fechaApertura >= fechaEvento) {
         this.errorMessage = 'La fecha de apertura debe ser menor que la fecha del evento';
         return;
@@ -175,18 +173,15 @@ export default {
       // Si es un evento gratuito, eliminamos el campo valor_base antes de enviar
       const eventoData = { ...this.evento };
       if (eventoData.tipo === 'gratuito') {
-        delete eventoData.valor_base; // Eliminar el campo valor_base para eventos gratuitos
+        delete eventoData.valor_base;
       }
 
-      // Si las validaciones pasan, limpiar el mensaje de error
       this.errorMessage = '';
 
       try {
         if (this.isEditing) {
-          // Editar evento
           await updateEvento(this.eventoId, eventoData);
         } else {
-          // Crear nuevo evento
           await createEvento(eventoData);
         }
         await this.fetchEventos();
@@ -202,7 +197,6 @@ export default {
       this.eventoId = evento.id;
       this.isEditing = true;
 
-      // Hacer scroll hacia el formulario
       this.$nextTick(() => {
         this.$refs.eventoForm.scrollIntoView({ behavior: 'smooth' });
       });
@@ -232,7 +226,7 @@ export default {
       };
       this.isEditing = false;
       this.eventoId = null;
-      this.errorMessage = ''; // Limpiar el mensaje de error al resetear el formulario
+      this.errorMessage = '';
     },
   },
 };

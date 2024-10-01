@@ -42,7 +42,7 @@ const Evento = sequelize.define('Evento', {
   }
 }, {
   tableName: 'eventos',
-  timestamps: true // Habilita createdAt y updatedAt
+  timestamps: true
 });
 
 module.exports = Evento;

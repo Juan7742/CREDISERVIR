@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const inscripcionesController = require('../controllers/inscripcionesController'); // Importar controladores
-const validateInscripcion = require('../validators/inscripcionesValidator'); // Importar validación
+const inscripcionesController = require('../controllers/inscripcionesController');
+const validateInscripcion = require('../validators/inscripcionesValidator');
 
 // Obtener todas las inscripciones
 router.get('/', inscripcionesController.getAllInscripciones);

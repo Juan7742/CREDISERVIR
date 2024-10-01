@@ -52,13 +52,12 @@ import { ref, watch } from 'vue';
 
 const navigation = ref([
   { name: 'Gestion de Eventos', href: '/eventos', current: false },
+  { name: 'Panel de Administración', href: '/administracion', current: false },
   { name: 'Asistentes', href: '/asistentes', current: false },
   { name: 'Pagos', href: '/pagos', current: false },
   { name: 'Promociones', href: '/promociones', current: false },
-  { name: 'Panel de Administración', href: '/administracion', current: false },
 ]);
 
-// Use the route to set the current page
 const route = useRoute();
 watch(route, () => {
   navigation.value.forEach(item => {
@@ -66,7 +65,6 @@ watch(route, () => {
   });
 });
 
-// Initial setting
 navigation.value.forEach(item => {
   item.current = route.path === item.href;
 });

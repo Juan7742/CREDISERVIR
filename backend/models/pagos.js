@@ -20,7 +20,7 @@ const Pago = sequelize.define('Pago', {
   }
 }, {
   tableName: 'pagos',
-  timestamps: true // Habilita createdAt y updatedAt
+  timestamps: true
 });
 
 module.exports = Pago;

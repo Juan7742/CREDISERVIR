@@ -2,7 +2,6 @@
   <div class="max-w-4xl mx-auto py-8 px-8">
     <h1 class="text-3xl font-bold mb-6">Gestión de Códigos Promocionales</h1>
 
-    <!-- Formulario para crear/editar código promocional -->
     <form @submit.prevent="submitForm" class="mb-8" ref="promocionForm">
       <div>
         <label class="block text-gray-500 font-bold text-lg mb-1 md:mb-0 pr-4">Código:</label>
@@ -33,7 +32,6 @@
       <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">Guardar Código</button>
     </form>
 
-    <!-- Lista de códigos promocionales -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div v-for="promo in promociones" :key="promo.id" class="bg-white shadow-md rounded p-4">
         <h3 class="text-xl font-bold">{{ promo.codigo }}</h3>
@@ -98,7 +96,6 @@ export default {
     editPromocion(promo) {
       this.promocion = { ...promo };
       this.promocionId = promo.id;
-      // Hacer scroll hacia el formulario
       this.$nextTick(() => {
         this.$refs.promocionForm.scrollIntoView({ behavior: 'smooth' });
       });
@@ -121,7 +118,7 @@ export default {
         estado: 'activo'
       };
       this.promocionId = null;
-      this.errorMessage = ''; // Limpiar el mensaje de error al resetear el formulario
+      this.errorMessage = '';
     },
   },
 };

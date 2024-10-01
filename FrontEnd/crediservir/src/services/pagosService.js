@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-// Función para procesar la compra
+// Función procesar compra
 export const realizarPago = async (data) => {
     try {
         const response = await axios.post('http://localhost:3000/pagos', data);
@@ -10,7 +10,7 @@ export const realizarPago = async (data) => {
     }
 };
 
-// Función para registrar la inscripción
+// registrar inscripción
 export const registrarInscripcion = async (data) => {
     try {
         const response = await axios.post('http://localhost:3000/inscripciones', data);

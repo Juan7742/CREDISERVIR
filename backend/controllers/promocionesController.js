@@ -53,7 +53,7 @@ exports.getPromocionPorCodigo = async (req, res) => {
     if (promocion) {
       return res.json(promocion); // Devolver la promoción encontrada
     }
-    res.status(404).json({ error: 'Promoción no encontrada' }); // Manejar caso en que no se encuentra
+    res.status(404).json({ error: 'Promoción no encontrada' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

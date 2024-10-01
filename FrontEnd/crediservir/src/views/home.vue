@@ -1,5 +1,5 @@
 <script>
 export default {
-  name: 'HomeView',  // Cambia 'Home' a 'HomeView'
+  name: 'HomeView',
 }
 </script>

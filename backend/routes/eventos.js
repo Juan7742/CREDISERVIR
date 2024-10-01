@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const eventosController = require('../controllers/eventosController'); // Importar controladores
-const validateEvento = require('../validators/eventosValidator'); // Importar validación
+const eventosController = require('../controllers/eventosController');
+const validateEvento = require('../validators/eventosValidator');
 
 // Obtener todos los eventos
 router.get('/', eventosController.getAllEventos);

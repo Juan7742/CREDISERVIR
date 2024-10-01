@@ -2,33 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Para personalizar el scrollbar en navegadores web */
 .scrollbar-thin {
     scrollbar-width: thin; /* Para Firefox */
 }
 
 .scrollbar-thumb {
-    background-color: rgb(40, 149, 128); /* Verde oscuro */
-    border-radius: 8px; /* Bordes redondeados */
+    background-color: rgb(40, 149, 128);
+    border-radius: 8px;
 }
 
 .scrollbar-thumb:hover {
-    background-color: rgb(40, 149, 128); /* Verde más oscuro en hover */
+    background-color: rgb(40, 149, 128); 
 }
 
 /* Para Chrome, Safari y otros navegadores Webkit */
 ::-webkit-scrollbar {
-    width: 8px; /* Ancho de la barra de desplazamiento */
+    width: 8px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: rgb(40, 149, 128); /* Color del pulgar de la barra de desplazamiento */
+    background-color: rgb(40, 149, 128);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background-color: #2f855a; /* Color del pulgar en hover */
+    background-color: #2f855a;
 }
 
 ::-webkit-scrollbar-track {
-    background: transparent; /* Color del fondo de la pista */
+    background: transparent;
 }
