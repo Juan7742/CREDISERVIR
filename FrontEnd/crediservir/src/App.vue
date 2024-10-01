@@ -1,4 +1,4 @@
-<template>
+<template class="max-w-4xl mx-auto py-8 px-8 overflow-y-auto scrollbar-thin scrollbar-thumb scrollbar-track">
   <div id="app">
     <Navbar /> <!-- Componente de navegación -->
     <div class="mt-16"> <!-- Espacio para el contenido principal -->
