@@ -72,9 +72,9 @@
 <script>
 import { getAsistentes } from '../services/asistentesService';
 import { getEventos } from '../services/eventosService';
-import { realizarPago, registrarInscripcion } from '../services/pagosService'; // Servicios de pagos e inscripciones
-import { buscarPromocion } from '../services/promocionesService'; // Verifica la ruta correcta
-
+import { realizarPago } from '../services/pagosService'; // Servicio para pagos
+import { registrarInscripcion } from '../services/inscripcionesService'; // Servicio para inscripciones
+import { buscarPromocion } from '../services/promocionesService'; 
 
 export default {
     name: 'PagosComponent',
@@ -139,7 +139,7 @@ export default {
             } catch (error) {
                 console.error('Error al buscar código promocional:', error);
                 this.descuentoPromocional[eventoId] = null;
-                this.mensaje = 'Código promocional no válido o no encontrado.';
+                this.mensaje = 'Código promocional no válido o no encontrado.'; 
             }
         },
         calcularCostoAdicional(eventoId) {
@@ -197,6 +197,12 @@ export default {
                     inscripcion_id: inscripcionResponse.id,
                     monto: totalAPagar,
                 });
+
+                // Restar 1 al cupo disponible del evento
+                const eventoIndex = this.eventos.findIndex(evento => evento.id === eventoId);
+                if (eventoIndex !== -1) {
+                    this.eventos[eventoIndex].cupo_disponible -= 1; // Actualiza el cupo disponible
+                }
 
                 this.mensaje = `Compra realizada con éxito para el evento: ${eventoId}`;
             } catch (error) {
