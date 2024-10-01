@@ -1,12 +1,20 @@
 <template>
   <div id="app">
-    <router-view />
+    <Navbar /> <!-- Componente de navegación -->
+    <div class="mt-16"> <!-- Espacio para el contenido principal -->
+      <router-view /> <!-- Este es el lugar donde se renderizarán las rutas -->
+    </div>
   </div>
 </template>
 
 <script>
+import Navbar from './components/NavBar.vue'; // Asegúrate de que la ruta sea correcta
+
 export default {
   name: 'App',
+  components: {
+    Navbar, // Declaración del componente Navbar
+  },
 };
 </script>
 
