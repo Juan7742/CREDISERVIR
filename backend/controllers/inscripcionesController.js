@@ -23,7 +23,9 @@ exports.createInscripcion = async (req, res) => {
 // Actualizar una inscripción existente
 exports.updateInscripcion = async (req, res) => {
   try {
+    //const [updated]: Desestructuramos el array solo para obtener el número de filas afectadas por la operación de actualización.
     const [updated] = await Inscripcion.update(req.body, { where: { id: req.params.id } });
+
     if (updated) {
       const updatedInscripcion = await Inscripcion.findOne({ where: { id: req.params.id } });
       res.status(200).json(updatedInscripcion);
